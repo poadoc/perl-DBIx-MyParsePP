@@ -72,6 +72,9 @@ sub toString {
 	my $value = $token->value();
 	my $result;
 
+	my $func_name = exists $DBIx::MyParsePP::Symbols::functions->{uc($value)} ?
+				$DBIx::MyParsePP::Symbols::functions->{uc($value)} : undef;
+
 	if ($type eq 'NCHAR_STRING') {
 		$result = $value;
 		$result =~ s{\\}{\\\\}sgio;
@@ -98,7 +101,7 @@ sub toString {
 		return '@';	# No leading space
 	} elsif (($type eq 'IDENT') || ($type eq 'LEX_HOSTNAME')) {
 		return $value.' ';	# No leading space
-	} elsif ($DBIx::MyParsePP::Symbols::functions->{uc($value)} eq $type) {
+	} elsif (defined $func_name && $func_name eq $type) {
 		return ' '.$value;	# No trailing space
 	} elsif ($type eq '(') {
 		return $value.' ';	# No leading space;

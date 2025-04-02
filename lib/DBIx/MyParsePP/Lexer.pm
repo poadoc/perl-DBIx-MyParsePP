@@ -179,6 +179,10 @@ sub yylex {
 		return (undef, '');	# EOF
 	} else {
 		my $token = DBIx::MyParsePP::Token->new(@res);
+                if($token->value && $token->value =~ /^PLACEHOLDER_/) {
+                    $token->setType('PARAM_MARKER');
+                    $res[0] = 'PARAM_MARKER';
+                }
 		push @{$lexer->[LEXER_TOKENS]}, $token;
 		return ($res[0], $token);
 	}
